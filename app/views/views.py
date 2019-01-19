@@ -33,15 +33,17 @@ def signup():
     username = data.get('username')
     isAdmin = data.get('isAdmin')
     password = data.get('password')
+    
     user = User()
 
     invalid_detail = user.check_repitition(username, email, password)
-    error_message = validators.validate_user_details(firstname, lastname,
-                                                     email, username, password,
-                                                     phoneNumber, isAdmin,
-                                                     othernames)
+    error_message = validators.validate_user_details(firstname.strip(), lastname.strip(),
+                                                     email.strip(), username.strip(), password.strip(),
+                                                     phoneNumber.strip(), isAdmin.strip(),
+                                                     othernames.strip())
     if error_message:
         return jsonify({"status": 400, 'error': error_message}), 400
+        
     elif invalid_detail:
         return jsonify({"status": 400, 'error': invalid_detail}), 400
     else:
@@ -111,14 +113,29 @@ def create_redflags():
     images = data.get('images')
     videos = data.get('videos')
     redflag = Redflag()
+
+    invalid_comment = validators.validate_coment(comment.strip())
     error_message = validators.validate_input(
         createdby, incident_type, status)
     wrong_location = validators.validate_location(location)
 
     if wrong_location:
         return jsonify({"status": 400, 'error': wrong_location}), 400
+
+ 
+
     elif error_message:
         return jsonify({"status": 400, 'error': error_message}), 400
+    elif invalid_comment:
+        return jsonify({"status": 400, 'error': invalid_comment}), 400
+        # elif option_values:
+    #     return jsonify({"status": 400, 'error': option_values}), 400
+
+    if not images or images.strip()=='':
+        data['images'] = 'none'
+
+    if not videos or videos.strip()=='':
+        data['videos'] = 'none'
     new_incident = redflag.create_redflag(
         data['createdby'],
         data['incident_type'],

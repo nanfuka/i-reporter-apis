@@ -21,22 +21,26 @@ class Validators:
         createdby = args[0]
         incident_type = args[1]
         status = args[2]
+       
 
         if not createdby:
             return 'please enter the id of the creator of this redflag'
         elif not isinstance(createdby, int):
             return 'createdby should be an id of the creator of the redflag'
-        elif not incident_type.strip():
+        elif incident_type=="":
             return 'Enter a redflag.'
         elif incident_type != "redflag" and incident_type != "intervention":
             return 'Incident type should either be a redflag or intervention.'
-        elif status != "draft":
-            return 'status should either be draft,\
-                underinvestigation, resolved or rejected'
+        elif status != "draft" and status!="resolved" and status!="underinvestigation" and status!="rejected":
+            strg1 = "status should either be draft, under"
+            strg2 = 'investigation, resolved or rejected'
+            return strg1+strg2
+        # elif not images or images == "":
+        #     images=='None'
 
     def validate_coment(self, comment):
         """method which validates comment"""
-        if not (comment).strip():
+        if comment == "":
             return 'Enter the comment'
         if isinstance(comment, int):
             return 'Comment should be a string'
@@ -59,15 +63,21 @@ class Validators:
                 or not isinstance(username, str) or \
                 not isinstance(othernames, str):
             return "Invalid input, Enter a string"
-        elif not firstname or firstname.isspace() or not lastname or\
-                lastname.isspace() or not email or email.isspace() or \
-                not username or username.isspace() or not password or \
-                password.isspace()or not isAdmin or isAdmin.isspace():
+        elif not firstname or firstname=="" or not lastname or\
+                lastname=="" or not email or email=="" or \
+                not username or username=="" or not password or \
+                password==""or not isAdmin or isAdmin=="":
             return {"message": "Enter only valid data"}
-        elif type(phoneNumber) == str:
+        elif isinstance(phoneNumber, str):
             return "The phone number should be an integer"
 
         elif isAdmin != 'false' and isAdmin != 'true':
             return "IsAdmin should either be true or false"
         elif not email_validation.match(email):
             return 'Invalid email, it should be in this format; kals@gma.com'
+
+    def validate_options(self, images, videos, data):
+        if not images or images == "":
+            data['images']=='None'
+        elif not videos or videos =="":
+            data['videos']=='None'
